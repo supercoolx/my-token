@@ -11,7 +11,7 @@ contract SuperCoolToken is ERC20, Ownable {
     uint256 public mintPriceInWei = 10000000000000; // 0.00001 BNB in wei
 
     constructor() ERC20("SuperCool", "SPU") {
-        _mint(msg.sender, 1000000 * 10**decimals()); // Mint initial supply to deployer
+        _mint(msg.sender, 1000000000 * 10**decimals()); // Mint initial supply to deployer
     }
 
     function mint() external payable {
@@ -19,11 +19,6 @@ contract SuperCoolToken is ERC20, Ownable {
 
         uint256 amountToMint = msg.value.div(mintPriceInWei).mul(10**decimals());
         _mint(msg.sender, amountToMint);
-
-        // Refund any excess BNB sent
-        if (msg.value > mintPriceInWei) {
-            payable(msg.sender).transfer(msg.value.sub(mintPriceInWei));
-        }
     }
 
     function setMintPrice(uint256 newPriceInWei) external onlyOwner {

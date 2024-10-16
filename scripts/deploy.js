@@ -1,11 +1,16 @@
-const { ethers, run, network } = require("hardhat");
+const { ethers, run } = require("hardhat");
 const { writeFileSync } = require("fs");
 
 async function main() {
-    // Get network data from Hardhat config (see hardhat.config.ts).
     const network = process.env.NETWORK;
-    // Check if the network is supported.
     console.log(`Deploying to ${network} network...`);
+
+    const [owner] = await ethers.getSigners();
+    const ownerAddress = await owner.getAddress();
+    console.log('Owner wallet:', ownerAddress);
+
+    const beforeBalance = await ethers.provider.getBalance(ownerAddress);
+    console.log('Owner balance:', ethers.formatEther(beforeBalance));
 
     const Token = await ethers.getContractFactory("SuperCoolToken");
     const token = await Token.deploy();
@@ -13,6 +18,12 @@ async function main() {
 
     const address = await token.getAddress();
     console.log("Token deployed to:", address);
+
+    const afterBalance = await ethers.provider.getBalance(ownerAddress);
+    console.log('Owner balance:', ethers.formatEther(afterBalance));
+
+    const totalSpent = beforeBalance - afterBalance;
+    console.log('Total spent:', ethers.formatEther(totalSpent), 'BNB');
 
     await run('verify:verify', {
         address: address,

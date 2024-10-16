@@ -5,5 +5,8 @@
     "@openzeppelin/contracts": "^4.9.6",
     "dotenv": "^16.4.5",
     "hardhat": "^2.22.10"
+  },
+  "scripts": {
+    "deploy": "npx hardhat run scripts/deploy.js"
   }
 }
